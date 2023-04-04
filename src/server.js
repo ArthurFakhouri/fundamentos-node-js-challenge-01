@@ -1,7 +1,10 @@
 import http from 'node:http';
 import { extractQueryParams } from './utils/extract-query-params.js';
 import { routes } from './routes.js';
-import { json } from './middlewares/json.js'
+import { json } from './middlewares/json.js';
+import { importCsvFileToDatabase } from './streams/import-from-csv.js';
+
+importCsvFileToDatabase();
 
 const server = http.createServer(async (req, res) => {
     const { method, url } = req;
