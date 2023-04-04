@@ -48,6 +48,8 @@ export class Database {
         if(rowIndex > -1) {
             this.#database[table][rowIndex] = {...this.#database[table][rowIndex], ...data}
             this.#persist();
+        } else {
+            return {message: "ID invalid", status: 404};
         }
     }
 
@@ -57,6 +59,8 @@ export class Database {
         if(rowIndex > -1) {
             this.#database[table].splice(rowIndex, 1);
             this.#persist();
+        } else {
+            return {message: "ID invalid", status: 404};
         }
     }
 
@@ -69,6 +73,8 @@ export class Database {
             else
                this.#database[table][rowIndex].completed_at = new Date();
             this.#persist();
+        } else {
+            return {message: "ID invalid", status: 404};
         }
     }
 }
