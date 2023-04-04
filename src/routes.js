@@ -25,16 +25,21 @@ export const routes = [
         handler: (req, res) => {
             const { title, description } = req.body;
 
-            const task = {
-                id: randomUUID(),
-                title,
-                description,
-                completed_at: null,
-                created_at: new Date(),
-                updated_at: new Date(),
-            }
+            if (title && description) {
 
-            database.insert('tasks', task);
+                const task = {
+                    id: randomUUID(),
+                    title,
+                    description,
+                    completed_at: null,
+                    created_at: new Date(),
+                    updated_at: new Date(),
+                }
+
+                database.insert('tasks', task);
+            } else {
+                return res.writeHead(400).end('Title or description is missing!');
+            }
 
             return res.writeHead(201).end('Task has been created with success!');
         }
@@ -46,11 +51,19 @@ export const routes = [
             const { id } = req.params;
             const { title, description } = req.body;
 
-            database.update('tasks', id, {
-                title,
-                description,
-                updated_at: new Date()
-            });
+            if (title && description) {
+
+                const error = database.update('tasks', id, {
+                    title,
+                    description,
+                    updated_at: new Date()
+                });
+
+                if (error)
+                    return res.writeHead(error.status).end(error.message)
+            } else {
+                return res.writeHead(400).end('Title or description is missing!');
+            }
 
             return res.writeHead(204).end();
         }
@@ -61,7 +74,10 @@ export const routes = [
         handler: (req, res) => {
             const { id } = req.params;
 
-            database.delete('tasks', id);
+            const error = database.delete('tasks', id);
+
+            if (error)
+                return res.writeHead(error.status).end(error.message)
 
             return res.writeHead(204).end();
         }
@@ -72,7 +88,10 @@ export const routes = [
         handler: (req, res) => {
             const { id } = req.params;
 
-            database.checkTask('tasks', id);
+            const error = database.checkTask('tasks', id);
+
+            if (error)
+                return res.writeHead(error.status).end(error.message)
 
             return res.writeHead(204).end();
         }
